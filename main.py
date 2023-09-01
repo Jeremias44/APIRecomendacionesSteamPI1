@@ -14,24 +14,24 @@ app = FastAPI()
 # Saludo
 @app.get('/')
 def saludo():
-    return """Hola, te doy la bienvenida a la página de consulta. Podrás realizar distintas consultas:<br>
-1) userdata(user_id: str) devuelve<br>
-2) countreviews(fecha1: str,fecha2: str) devuelve <br>
-3) genre(genero: str)<br>
-4) userforgenre(genero: str)<br>
-5) developer(desarrollador: str)<br>
-6) sentiment_analysis(año: int)<br>
-7) recomendacion_juego(item_id: int)<br>
-"""
+    return {'Hola, te doy la bienvenida a Steam': 'Podrás realizar las siguientes consultas',
+'1) userdata(user_id: str)': 'devuelve',
+'2) countreviews(fecha1: str,fecha2: str)': 'devuelve',
+'3) genre(genero: str)': 'devuelve',
+'4) userforgenre(genero: str)': 'devuelve',
+'5) developer(desarrollador: str)' : 'devuelve',
+'6) sentiment_analysis(año: int)' : 'devuelve',
+'7) recomendacion_juego(item_id: int)' : 'devuelve'
+}
 
 # Función 1
 @app.get('/userdata')
 def userdata(user_id: str): 
     #Cantidad de dinero gastado
-    df = pd.read_csv(r'csv_funciones\1userdata.csv')
+    df = pd.read_csv(r'1userdata.csv')
     dinero_gastado = sum(df.price[df.user_id == user_id])
     #Porcentaje de recomendación
-    df2 = pd.read_csv(r'csv_ETL\reviews_desanidado.csv')
+    df2 = pd.read_csv(r'reviews_desanidado.csv')
     recomendaciones_positivas = df2.recommend[df2.user_id == user_id].sum()
     recomendaciones_totales = df2.recommend[df2.user_id == user_id].count()
     porcentaje_recomendaciones = round((recomendaciones_positivas/recomendaciones_totales)*100,2)
@@ -48,7 +48,7 @@ def countreviews(fecha1: str,fecha2: str):
     fecha2 = datetime.strptime(fecha2, "%Y-%m-%d")
 
     # Cantidad de usuarios que recomendaron entre fecha1 y fecha2
-    reviews = pd.read_csv(r'csv_ETL\reviews_desanidado.csv')
+    reviews = pd.read_csv(r'reviews_desanidado.csv')
     # Convierto los valores a tipo datetime
     reviews['posted'] = pd.to_datetime(reviews['posted'], errors='coerce')
     # Obtengo la cantidad de usuarios únicos que postearon reviews entre fecha1 y fecha2
@@ -80,7 +80,7 @@ def genre(genero: str):
 # Función 4
 @app.get('/userforgenre')
 def userforgenre(genero: str):
-    grouped_data = pd.read_csv(r'csv_funciones\4userforgenre.csv')
+    grouped_data = pd.read_csv(r'4userforgenre.csv')
     sorted_grouped_data = grouped_data.sort_values(by=genero, ascending=False)
     # Obtengo los cinco primeros registros y selecciono las columnas deseadas
     top_records = sorted_grouped_data.head(5)[['user_id', 'user_url']]
@@ -96,7 +96,7 @@ def userforgenre(genero: str):
 # Función 5
 @app.get('/developer')
 def developer(desarrollador: str):
-    g_año = pd.read_csv(r'csv_funciones\5developer.csv')
+    g_año = pd.read_csv(r'5developer.csv')
     # Filtro el DataFrame por el desarrollador deseado
     g_año_filtrado = g_año[g_año['developer'] == desarrollador]
     # Agrupo los datos por año y realizo las operaciones de conteo y porcentaje
@@ -112,7 +112,7 @@ def developer(desarrollador: str):
 # Función 6
 @app.get('/sentiment_analysis')
 def sentiment_analysis(año: int):
-    año_reviews = pd.read_csv(r'csv_funciones\6sentiment_analysis.csv')
+    año_reviews = pd.read_csv(r'6sentiment_analysis.csv')
     negativo = año_reviews[año_reviews['año'] == año].iloc[0][1]
     neutral = año_reviews[año_reviews['año'] == año].iloc[0][2]
     positivo = año_reviews[año_reviews['año'] == año].iloc[0][3]
@@ -122,7 +122,7 @@ def sentiment_analysis(año: int):
 # Función 7
 @app.get('/recomendacion_juego')
 def recomendacion_juego(item_id: int):
-    df_7 = pd.read_csv(r'csv_funciones\7recomendacion_juego.csv')
+    df_7 = pd.read_csv(r'7recomendacion_juego.csv')
 
     # Imputo los valores faltantes con 0
     imputer = SimpleImputer(strategy='constant', fill_value=0)
