@@ -14,15 +14,15 @@ app = FastAPI()
 # Saludo
 @app.get('/')
 def saludo():
-    return """Hola, te doy la bienvenida a la página de consulta. Podrás realizar distintas consultas:
-            1) userdata(user_id: str) devuelve
-            2)
-            3)
-            4)
-            5)
-            6)
-            7)
-            """
+    return """Hola, te doy la bienvenida a la página de consulta. Podrás realizar distintas consultas:<br>
+1) userdata(user_id: str) devuelve<br>
+2) countreviews(fecha1: str,fecha2: str) devuelve <br>
+3) genre(genero: str)<br>
+4) userforgenre(genero: str)<br>
+5) developer(desarrollador: str)<br>
+6) sentiment_analysis(año: int)<br>
+7) recomendacion_juego(item_id: int)<br>
+"""
 
 # Función 1
 @app.get('/userdata')
