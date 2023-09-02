@@ -8,20 +8,21 @@ from sklearn.metrics import pairwise_distances
 from sklearn.impute import SimpleImputer
 from sklearn.cluster import KMeans
 
+df2 = pd.read_csv(r'2reviews_desanidado.csv')
 
 app = FastAPI()
 
 # Saludo
 @app.get('/')
 def saludo():
-    return {'Hola, te doy la bienvenida a Steam': 'Podrás realizar las siguientes consultas',
-'1) userdata(user_id: str)': 'devuelve',
-'2) countreviews(fecha1: str,fecha2: str)': 'devuelve',
-'3) genre(genero: str)': 'devuelve',
-'4) userforgenre(genero: str)': 'devuelve',
-'5) developer(desarrollador: str)' : 'devuelve',
-'6) sentiment_analysis(año: int)' : 'devuelve',
-'7) recomendacion_juego(item_id: int)' : 'devuelve'
+    return {'Hola, te doy la bienvenida a la API de consultas de Steam': 'Podrás realizar las siguientes consultas',
+'1)userdata(user_id: str)': 'devuelve cantidad de dinero gastado, porcentaje de recomendaciones positivas y cantidad de items del usuario solicitado',
+'2)countreviews(fecha1: str,fecha2: str)': 'devuelve cantidad de usuarios que dieron opiniones entre las fechas dadas y el porcentaje de recomendaciones positivas',
+'3)genre(genero: str)': 'devuelve el puesto en el que se encuentra el género indicado en el ranking de horas jugadas',
+'4)userforgenre(genero: str)': 'devuelve 5 usuarios con más horas de juego en el género indicado',
+'5)developer(desarrollador: str)' : 'devuelve cantidad de items y porcentaje de contenido gratis por año de la empresa indicada',
+'6)sentiment_analysis(año: int)' : 'devuelve la cantidad de reseñas del año indicado, categorizadas en positivo, negativo y neutral',
+'7)recomendacion_juego(item_id: int)' : 'devuelve una lista con 5 juegos recomendados similares al ingresado'
 }
 
 # Función 1
@@ -31,36 +32,34 @@ def userdata(user_id: str):
     df = pd.read_csv(r'1userdata.csv')
     dinero_gastado = float(sum(df.price[df.user_id == user_id]))
     #Porcentaje de recomendación
-    df2 = pd.read_csv(r'2reviews_desanidado.csv')
     recomendaciones_positivas = int(df2.recommend[df2.user_id == user_id].sum())
     recomendaciones_totales = int(df2.recommend[df2.user_id == user_id].count())
     porcentaje_recomendaciones = round((recomendaciones_positivas/recomendaciones_totales)*100,2)
     #Cantidad de items
     cantidad_items = int(df.items_count[df.user_id == user_id].max())
-    return {'dinero gastado por el usuario': round(float(dinero_gastado),2),
-            'porcentaje de recomendaciones positivas': porcentaje_recomendaciones,
-            'cantidad de items del usuario': int(cantidad_items)}
+    return {f'dinero gastado por el usuario {user_id}': round(float(dinero_gastado),2),
+            f'porcentaje de recomendaciones positivas del usuario {user_id}': porcentaje_recomendaciones,
+            f'cantidad de items del usuario {user_id}': int(cantidad_items)}
 
 # Función 2
 @app.get('/countreviews')
 def countreviews(fecha1: str,fecha2: str):
-    fecha1 = datetime.strptime(fecha1, "%Y-%m-%d")
-    fecha2 = datetime.strptime(fecha2, "%Y-%m-%d")
+    fecha1 = datetime.strptime(fecha1, "%Y-%m-%d").strftime("%Y-%m-%d")
+    fecha2 = datetime.strptime(fecha2, "%Y-%m-%d").strftime("%Y-%m-%d")
 
     # Cantidad de usuarios que recomendaron entre fecha1 y fecha2
-    reviews = pd.read_csv(r'2reviews_desanidado.csv')
     # Convierto los valores a tipo datetime
-    reviews['posted'] = pd.to_datetime(reviews['posted'], errors='coerce')
+    df2['posted'] = pd.to_datetime(df2['posted'], errors='coerce')
     # Obtengo la cantidad de usuarios únicos que postearon reviews entre fecha1 y fecha2
-    cantidad_usuarios = len(reviews.user_id[(fecha1 < reviews.posted) & (fecha2 > reviews.posted)].unique())
+    cantidad_usuarios = len(df2.user_id[(fecha1 < df2.posted) & (fecha2 > df2.posted)].unique())
     # Porcentaje de recomendaciones de estos usuarios
-    lista_user = reviews.user_id[(fecha1 < reviews.posted) & (fecha2 > reviews.posted)].unique()
-    recomendaciones_positivas = reviews.recommend[reviews.user_id.isin(lista_user)].sum()
-    recomendaciones_totales = reviews.recommend[reviews.user_id.isin(lista_user)].count()
+    lista_user = df2.user_id[(fecha1 < df2.posted) & (fecha2 > df2.posted)].unique()
+    recomendaciones_positivas = df2.recommend[df2.user_id.isin(lista_user)].sum()
+    recomendaciones_totales = df2.recommend[df2.user_id.isin(lista_user)].count()
     porcentaje_recomendaciones = round((recomendaciones_positivas/recomendaciones_totales)*100,2)
 
-    return {'cantidad de usuarios': cantidad_usuarios,
-            'porcentaje de recomendaciones de los usuarios': porcentaje_recomendaciones}
+    return {f'cantidad de usuarios que dieron opiniones entre {fecha1} y {fecha2}': cantidad_usuarios,
+            f'porcentaje de recomendaciones positivas entre {fecha1} y {fecha2}': porcentaje_recomendaciones}
 
 # Función 3
 @app.get('/genre')
@@ -75,7 +74,7 @@ def genre(genero: str):
             puesto = genre_tuple[1]
             break  # Se rompe el bucle una vez que se encuentra el género
 
-    return {f'El género "{genero}" se encuentra en el puesto del ranking': puesto}
+    return {f'En el ranking de horas jugadas, el género "{genero}" se encuentra en el puesto': puesto}
 
 # Función 4
 @app.get('/userforgenre')
@@ -117,7 +116,7 @@ def sentiment_analysis(año: int):
     neutral = año_reviews[año_reviews['año'] == año].iloc[0][2]
     positivo = año_reviews[año_reviews['año'] == año].iloc[0][3]
         
-    return {'negativo': negativo, 'neutral': neutral, 'positivo': positivo}
+    return {'reseñas negativas': negativo, 'reseñas neutrales': neutral, 'reseñas positivas': positivo}
 
 # Función 7
 @app.get('/recomendacion_juego')
@@ -152,4 +151,4 @@ def recomendacion_juego(item_id: int):
     # Paso 6: Paso a enteros y los coloco en una lista
     item_id_recomendados = id_cercanos.iloc[1:].astype(int).tolist()
 
-    return {'5 item_id recomendados': item_id_recomendados}
+    return {f'5 item_id recomendados similares al juego con item_id {item_id}': item_id_recomendados}
