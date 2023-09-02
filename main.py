@@ -29,11 +29,11 @@ def saludo():
 def userdata(user_id: str): 
     #Cantidad de dinero gastado
     df = pd.read_csv(r'1userdata.csv')
-    dinero_gastado = sum(df.price[df.user_id == user_id])
+    dinero_gastado = float(sum(df.price[df.user_id == user_id]))
     #Porcentaje de recomendación
     df2 = pd.read_csv(r'reviews_desanidado.csv')
-    recomendaciones_positivas = df2.recommend[df2.user_id == user_id].sum()
-    recomendaciones_totales = df2.recommend[df2.user_id == user_id].count()
+    recomendaciones_positivas = int(df2.recommend[df2.user_id == user_id].sum())
+    recomendaciones_totales = int(df2.recommend[df2.user_id == user_id].count())
     porcentaje_recomendaciones = round((recomendaciones_positivas/recomendaciones_totales)*100,2)
     #Cantidad de items
     cantidad_items = df.items_count[df.user_id == user_id].max()
@@ -149,6 +149,7 @@ def recomendacion_juego(item_id: int):
     indices_cercanos = np.argsort(distancias)[0][:6]
     # Paso 5: Obtengo los item_id de los 5 más cercanos
     id_cercanos = df_7.iloc[indices_mismo_cluster[indices_cercanos]]['item_id']
+    # Paso 6: Paso a enteros y los coloco en una lista
+    item_id_recomendados = id_cercanos.iloc[1:].astype(int).tolist()
 
-    
-    return {'5 item_id recomendados': [id_cercanos.iloc[1], id_cercanos.iloc[2], id_cercanos.iloc[3], id_cercanos.iloc[4], id_cercanos.iloc[5]]}
+    return {'5 item_id recomendados': item_id_recomendados}
