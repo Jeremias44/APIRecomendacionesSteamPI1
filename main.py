@@ -31,15 +31,15 @@ def userdata(user_id: str):
     df = pd.read_csv(r'1userdata.csv')
     dinero_gastado = float(sum(df.price[df.user_id == user_id]))
     #Porcentaje de recomendación
-    df2 = pd.read_csv(r'reviews_desanidado.csv')
+    df2 = pd.read_csv(r'2reviews_desanidado.csv')
     recomendaciones_positivas = int(df2.recommend[df2.user_id == user_id].sum())
     recomendaciones_totales = int(df2.recommend[df2.user_id == user_id].count())
     porcentaje_recomendaciones = round((recomendaciones_positivas/recomendaciones_totales)*100,2)
     #Cantidad de items
-    cantidad_items = df.items_count[df.user_id == user_id].max()
-    return {'dinero gastado por el usuario': round(dinero_gastado,2),
+    cantidad_items = int(df.items_count[df.user_id == user_id].max())
+    return {'dinero gastado por el usuario': round(float(dinero_gastado),2),
             'porcentaje de recomendaciones positivas': porcentaje_recomendaciones,
-            'cantidad de items del usuario': cantidad_items}
+            'cantidad de items del usuario': int(cantidad_items)}
 
 # Función 2
 @app.get('/countreviews')
@@ -48,7 +48,7 @@ def countreviews(fecha1: str,fecha2: str):
     fecha2 = datetime.strptime(fecha2, "%Y-%m-%d")
 
     # Cantidad de usuarios que recomendaron entre fecha1 y fecha2
-    reviews = pd.read_csv(r'reviews_desanidado.csv')
+    reviews = pd.read_csv(r'2reviews_desanidado.csv')
     # Convierto los valores a tipo datetime
     reviews['posted'] = pd.to_datetime(reviews['posted'], errors='coerce')
     # Obtengo la cantidad de usuarios únicos que postearon reviews entre fecha1 y fecha2
