@@ -78,6 +78,8 @@ Tenemos disponible un sitio en Render para realizar las consultas mencionadas en
 
 * Sitio de consultas: https://consultas-steam-jeremias-pombo.onrender.com/docs
 
-Tenemos un link a un video donde se muestra el funcionamiento de la API respondiendo a distintas consultas:
+Tenemos un video donde se muestra el funcionamiento de la API respondiendo a distintas consultas:
 
-* linkdelvideo
+* Link de Youtube: https://www.youtube.com/watch?v=NIOKhnZ9J7E&ab_channel=JEREM%C3%8DASPOMBO
+
+* Link de descarga de GITHUB: https://github.com/Jeremias44/Proyecto_Individual_1/blob/main/presentaci%C3%B3n%20proyecto%20individual%201%20-%20Labs%20Henry%20-%20Jerem%C3%ADas%20Pombo.mp4
