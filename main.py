@@ -8,7 +8,7 @@ from sklearn.metrics import pairwise_distances
 from sklearn.impute import SimpleImputer
 from sklearn.cluster import KMeans
 
-df2 = pd.read_csv(r'2reviews_desanidado.csv')
+
 
 app = FastAPI()
 
@@ -30,6 +30,7 @@ def saludo():
 def userdata(user_id: str): 
     #Cantidad de dinero gastado
     df = pd.read_csv(r'1userdata.csv')
+    df2 = pd.read_csv(r'2reviews_desanidado.csv')
     dinero_gastado = float(sum(df.price[df.user_id == user_id]))
     #Porcentaje de recomendación
     recomendaciones_positivas = int(df2.recommend[df2.user_id == user_id].sum())
@@ -46,6 +47,7 @@ def userdata(user_id: str):
 def countreviews(fecha1: str,fecha2: str):
     fecha1 = datetime.strptime(fecha1, "%Y-%m-%d").strftime("%Y-%m-%d")
     fecha2 = datetime.strptime(fecha2, "%Y-%m-%d").strftime("%Y-%m-%d")
+    df2 = pd.read_csv(r'2reviews_desanidado.csv')
 
     # Cantidad de usuarios que recomendaron entre fecha1 y fecha2
     # Convierto los valores a tipo datetime
