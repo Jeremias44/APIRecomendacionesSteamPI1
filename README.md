@@ -41,7 +41,7 @@ Luego de un EDA, estudiando las necesidades del negocio y la naturaleza de las c
 * 6sentiment_analysis.csv
 * 7recomendacion_juego.csv
 
-Se cuenta con los archivos ipynb correspondientes para hacer un seguimiento del ETL y EDA, y tener disponible el proceso ante la eventual llegada de nuevos datos.
+Se cuenta con los archivos ipynb correspondientes para hacer un seguimiento del ETL y EDA (la explicación de los procesos se encuentra dentro de cada archivo), y tener disponible el proceso ante la eventual llegada de nuevos datos.
 Los archivos son:
 
 * ETL_Games.ipynb
@@ -66,7 +66,7 @@ En el archivo requirements.txt tenemos la lista de las librerías a utilizar
 Los resultados están disponibles en un sitio de Render de acceso público, desde donde se pueden realizar las consultas
 
 
-## Detalles
+## Enlaces
 
 Tenemos disponibles todos los archivos ipynb, txt, py, csv necesarios en el siguiente repositorio de GITHUB:
 
