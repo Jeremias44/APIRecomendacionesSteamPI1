@@ -3,3 +3,9 @@ venv/
 
 # Ignorar el archivo MP4
 video.mp4
+
+# Ignorar carpeta csv_ETL
+csv_ETL
+
+# Ignorar carpeta json_originales
+json_originales
