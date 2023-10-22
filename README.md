@@ -1,4 +1,4 @@
-# Proyecto_Individual_1
+# Consultas y Recomendaciones Steam
 
 Steam, plataforma multinacional de videojuegos.
 
